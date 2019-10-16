@@ -63,11 +63,11 @@ function BrowserHade($agent = null, $type = 1) {
 			}elseif ($type == 1) {
 				$out = $value;
 			}elseif ($type == 2) {
-				$out = "<img height='16' width='16' style='margin-bottom:-2px' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='/style/browser/{$value}.png'>";
+				$out = "<img height='16' width='16' style='margin-bottom:-2px' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='/browser/{$value}.png'>";
 			}elseif ($type == 3) {
-				$out = "<img height='16' width='16' style='margin-bottom:-2px' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='/style/browser/{$value}.png'>".' '.$outName;
+				$out = "<img height='16' width='16' style='margin-bottom:-2px' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='/browser/{$value}.png'>".' '.$outName;
 			}elseif ($type == 4) {
-				$out = "<img height='14' width='14' style='margin-bottom:-2px' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='/style/browser/{$value}.png'>".' '.$outName;
+				$out = "<img height='14' width='14' style='margin-bottom:-2px' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='/browser/{$value}.png'>".' '.$outName;
 			}
 			return $out;
         }	
