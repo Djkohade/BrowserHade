@@ -16,6 +16,7 @@ echo BrowserHade($_SERVER['HTTP_USER_AGENT']);
 //一个简单的函数，用于根据用户代理识别用户的浏览器。
 
 //使用示例：
+
 echo BrowserHade($_SERVER['HTTP_USER_AGENT']);
 
 <h3>UZ BrowserHade</h3>
