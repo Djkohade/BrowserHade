@@ -1,13 +1,47 @@
-<?
+<?php
 
+/**
+ * BrowserHade
+ *
+ * @author Djkohade
+ * @version 2.0.0
+ * @created 2017
+ * @updated 2024
+ * Function to identify the browser based on the User-Agent string.
+ *
+ * @param string|null $agent The User-Agent string. If null, the function will use the server's User-Agent.
+ * @param int $type The type of output format:
+ *                  1 - Returns the browser name,
+ *                  2 - Returns an HTML image tag for the browser icon,
+ *                  3 - Returns an HTML image tag and the browser name,
+ *                  4 - Returns a smaller HTML image tag and the browser name.
+ * @return string|false Returns the specified output or false if no User-Agent is provided.
+ *
+ * Функция для определения браузера на основе строки User-Agent.
+ *
+ * @param string|null $agent Строка User-Agent. Если null, функция будет использовать User-Agent сервера.
+ * @param int $type Тип формата вывода:
+ *                  1 - Возвращает название браузера,
+ *                  2 - Возвращает HTML-тег изображения для иконки браузера,
+ *                  3 - Возвращает HTML-тег изображения и название браузера,
+ *                  4 - Возвращает меньший HTML-тег изображения и название браузера.
+ * @param string $imagePath Путь к папке с изображениями браузеров.
+ * @return string|false Возвращает указанный вывод или false, если User-Agent не предоставлен.
+ */
+ 
 function BrowserHade($agent = null, $type = 1) {
-	if ($agent == null AND isset($_SERVER['HTTP_USER_AGENT'])) {
-		$agent = $_SERVER['HTTP_USER_AGENT'];
-	}
-	elseif ($agent == null) return false;
+	//Папка с иконками
+	$imagePath = '/ImagesBrowser/'
+    // Используем User-Agent сервера, если не указан
+    if (empty($agent) && !empty($_SERVER['HTTP_USER_AGENT'])) {
+        $agent = $_SERVER['HTTP_USER_AGENT'];
+    } elseif (empty($agent)) {
+        return false; // Возвращаем false, если User-Agent не найден
+    }
 	
-	$browsers = array(
-		//bots
+    // Список известных браузеров и ботов
+	$browsers = [
+		// Боты
 		'bingbot' => 'bot',
 		'Yahoo' => 'bot',
 		'Googlebot' => 'bot',
@@ -20,7 +54,7 @@ function BrowserHade($agent = null, $type = 1) {
 		'StackRambler' => 'bot',
 		'Mail.Ru' => 'bot',
 		'Aport' => 'bot',
-		'WebAlta ' => 'bot',
+		'WebAlta' => 'bot',
 		'Googlebot-Mobile' => 'bot',
 		'Googlebot-Image' => 'bot',
 		'Mediapartners-Google' => 'bot',
@@ -28,7 +62,12 @@ function BrowserHade($agent = null, $type = 1) {
 		'MSNBot-NewsBlogs' => 'bot',
 		'MSNBot-Products' => 'bot',
 		'MSNBot-Media' => 'bot',
-		//bots end
+		'AhrefsBot' => 'bot',
+		'SemrushBot' => 'bot',
+		'BingPreview' => 'bot',
+		'DotBot' => 'bot',
+		'Screaming Frog SEO Spider' => 'bot',
+		// Конец ботов
 		'UCBrowser' => 'UCBrowser',
 		'YaBrowser' => 'Yandex.Browser',
 		'iPhone' => 'iPhone',
@@ -50,26 +89,43 @@ function BrowserHade($agent = null, $type = 1) {
 		'safari' => 'safari',
 		'Windows NT' => 'Internet.Explorer',
 		'Netscape' => 'Netscape',
-		//vk Bot gen link
+		// vk Bot gen link
 		'vkShare' => 'vkShare',
 		'Mozilla' => 'Mozilla',
-	);
-	$value = 'not-found';
-    foreach ($browsers as $item => $value) { 
-        if (preg_match("/". $item ."/", $agent, $match)) {  
-			$outName = $value;
-			if ($value == 'bot') {
-				$outName = $item;
-			}elseif ($type == 1) {
-				$out = $value;
-			}elseif ($type == 2) {
-				$out = "<img height='16' width='16' style='margin-bottom:-2px' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='/ImagesBrowser/{$value}.png'>";
-			}elseif ($type == 3) {
-				$out = "<img height='16' width='16' style='margin-bottom:-2px' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='/ImagesBrowser/{$value}.png'>".' '.$outName;
-			}elseif ($type == 4) {
-				$out = "<img height='14' width='14' style='margin-bottom:-2px' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='/ImagesBrowser/{$value}.png'>".' '.$outName;
-			}
-			return $out;
-        }	
+		'Edg/' => 'Edge',
+		'OPR/' => 'Opera',
+		'Fennec/' => 'Firefox.Mobile',
+		'Vivaldi/' => 'Vivaldi',
+		'Brave/' => 'Brave',
+		'Konqueror' => 'Konqueror',
+		'Midori' => 'Midori',
+	];
+
+
+    // Проверяем User-Agent на соответствие известным браузерам
+    foreach ($browsers as $item => $value) {
+        if (preg_match("/" . preg_quote($item, '/') . "/i", $agent)) {
+            $outName = $value;
+            if ($value == 'bot') {
+                $outName = $item; // Если это бот, используем имя бота
+            }
+
+            // Определяем вывод в зависимости от типа
+            switch ($type) {
+                case 1:
+                    return $value; // Возвращаем название браузера
+                case 2:
+                    return "<img height='16' width='16' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='{$imagePath}{$value}.png'>"; // Возвращаем только тег изображения
+                case 3:
+                    return "<img height='16' width='16' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='{$imagePath}{$value}.png'> " . $outName; // Возвращаем тег изображения и название
+                case 4:
+                    return "<img height='14' width='14' class='imgBrowserHade' title='{$outName}' alt='{$outName}' src='{$imagePath}{$value}.png'> " . $outName; // Возвращаем меньший тег изображения и название
+                default:
+                    return false; // Возвращаем false для неизвестного типа
+            }
+        }
     }
+    return 'не найден'; // Возвращаем 'не найден', если браузер не найден
 }
+
+?>
